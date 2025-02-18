@@ -1,0 +1,44 @@
+Problem 2: The Skyline Problem
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <set>
+
+using namespace std;
+
+vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+    vector<pair<int, int>> events;
+    for (auto& b : buildings) {
+        events.emplace_back(b[0], -b[2]); // Building start (negative height)
+        events.emplace_back(b[1], b[2]);  // Building end (positive height)
+    }
+
+    sort(events.begin(), events.end()); // Sort by x-coordinate, handling ties properly
+
+    multiset<int> heights = {0};
+    vector<vector<int>> skyline;
+    int prevHeight = 0;
+
+    for (auto& [x, h] : events) {
+        if (h < 0) heights.insert(-h);  // Insert height for building start
+        else heights.erase(heights.find(h)); // Remove height for building end
+
+        int maxHeight = *heights.rbegin();
+        if (maxHeight != prevHeight) { // Height change detected
+            skyline.push_back({x, maxHeight});
+            prevHeight = maxHeight;
+        }
+    }
+    return skyline;
+}
+
+int main() {
+    vector<vector<int>> buildings = {{2,9,10}, {3,7,15}, {5,12,12}, {15,20,10}, {19,24,8}};
+    vector<vector<int>> res = getSkyline(buildings);
+    
+    for (auto& point : res) {
+        cout << "[" << point[0] << "," << point[1] << "] ";
+    }
+    return 0;
+}
+
