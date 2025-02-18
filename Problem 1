@@ -1,0 +1,28 @@
+Problem 1: Beautiful Array
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> beautifulArray(int n) {
+    vector<int> result = {1};
+    while (result.size() < n) {
+        vector<int> temp;
+        for (int num : result) {
+            if (num * 2 - 1 <= n) temp.push_back(num * 2 - 1);
+        }
+        for (int num : result) {
+            if (num * 2 <= n) temp.push_back(num * 2);
+        }
+        result = temp;
+    }
+    return result;
+}
+
+int main() {
+    int n = 5; // Change n as needed
+    vector<int> res = beautifulArray(n);
+    for (int num : res) cout << num << " ";
+    return 0;
+}
